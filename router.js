@@ -19,3 +19,32 @@ module.exports = class Router {
         return null;
     }
 }
+
+const talkPath = /^\/talks\/([^\/]+)$/;
+
+router.add("GET", talkPath, async (server, title) => {
+    if (title in server.talks) {
+        return {body: JSON.stringify(server.talks[title]),
+        headers: {"Content-Type": "application/json"}};
+    } else {
+        return {status: 404, body: `No talk '${title}' found`};
+    }
+});
+
+router.add("DELETE", talkPath, async (server, title) => {
+    if (title in server.talks) {
+        delete server.talks[title];
+        server.updated();
+    }
+    return {status: 204};
+});
+
+function readStream(stream) {
+        return new Promise((resolve, reject) => {
+            let data = "";
+            stream.on("error", reject);
+            stream.on("data", chunk => data += chunk.toString());
+            stream.on("end", () => resolve(data));
+        });
+    }
+    

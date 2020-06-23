@@ -30,9 +30,9 @@ class SkillShareServer {
         });
     }
     start(port) {
-    this.server.listen(port);
+        this.server.listen(port);
     }
     stop() {
-    this.server.close();
+        this.server.close();
     }
 }
